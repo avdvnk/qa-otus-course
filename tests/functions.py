@@ -1,8 +1,6 @@
 
 
 class Test:
-    def __init__(self):
-        pass
 
     @staticmethod
     def concatenate_strings(first_str, second_str):
