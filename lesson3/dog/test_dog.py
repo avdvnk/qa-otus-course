@@ -1,6 +1,6 @@
 import json
-
 import pytest
+
 from dog_api import DogAPI
 
 breeds = ["akita", "beagle", "cairn", "chow", "pug", "retriever"]
