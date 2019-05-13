@@ -31,9 +31,9 @@ class CdnjsAPI:
 
     @staticmethod
     def get_by_search_with_fields(input_string, fields):
-        url = "{}?search={}&fields=".format(api, input_string)
+        url = "{}?search={}&fields=".format(api, str(input_string))
         for field in fields:
-            url += "{},".format(field)
+            url += "{},".format(str(field))
         url = url[:-1]
         response = CdnjsAPI.__send_command(requests.get, url)
         return response
