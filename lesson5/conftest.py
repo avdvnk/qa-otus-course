@@ -4,6 +4,8 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.ie.options import Options as IEOptions
 
+DRIVER_PATH = "C:\\PyProjects\\drivers\\"
+
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox", help="Browser name")
@@ -16,20 +18,16 @@ def driver(request):
     if browser == "firefox":
         firefox_options = FirefoxOptions()
         firefox_options.add_argument("-headless")
-        wd = webdriver.Firefox(options=firefox_options)
+        execute_path = DRIVER_PATH + "geckodriver.exe"
+        wd = webdriver.Firefox(options=firefox_options, executable_path=execute_path)
     elif browser == "chrome":
         chrome_options = ChromeOptions()
         chrome_options.add_argument("--headless")
-        wd = webdriver.Chrome(options=chrome_options)
+        execute_path = DRIVER_PATH + "chromedriver.exe"
+        wd = webdriver.Chrome(options=chrome_options, executable_path=execute_path)
     else:
         ie_options = IEOptions()
         wd = webdriver.Ie()
     wd.maximize_window()
     yield wd
     wd.quit()
-
-
-@pytest.fixture()
-def open_opencart_page(driver, request):
-    url = "opencart/"
-    return driver.get("".join([request.config.getoption("--address"), url]))
