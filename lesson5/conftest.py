@@ -4,12 +4,12 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.ie.options import Options as IEOptions
 
-DRIVER_PATH = "C:\\PyProjects\\drivers\\"
+DRIVER_PATH = "D:\\drivers\\"
 
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox", help="Browser name")
-    parser.addoption("--address", action="store", default="http://192.168.0.1/", help='Opencart address')
+    parser.addoption("--address", action="store", default="http://192.168.0.108/opencart", help='Opencart address')
 
 
 @pytest.fixture(scope="session", autouse=True)

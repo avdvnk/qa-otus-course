@@ -7,4 +7,4 @@ class BaseLocators(object):
 
 class MainPageLocators(object):
 
-    DASHBOARD = (By.XPATH, "//h1[@class='panel-title']")
+    DASHBOARD = (By.XPATH, "//a[@href='http://192.168.0.108/opencart/index.php?route=common/home']")
