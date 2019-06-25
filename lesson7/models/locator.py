@@ -36,3 +36,5 @@ class ProductPageLocators:
     NAV_TABS = (By.TAG_NAME, "li")
     TABLE_ROW = (By.TAG_NAME, "tr")
     ROW_COLUMN = (By.TAG_NAME, "td")
+    REMOVE_BUTTON = (By.XPATH, "//button[@data-original-title='Delete']")
+    DESCRIPTION_FIELD = (By.XPATH, "//div[@class='note-editable panel-body']")

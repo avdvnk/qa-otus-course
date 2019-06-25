@@ -1,3 +1,7 @@
+from time import sleep
+
+from selenium.webdriver.common.keys import Keys
+
 from lesson7.models.locator import MainPageLocators, ProductPageLocators
 from lesson7.models.page import BasePage
 from lesson7.models.locator import AdminPageLocators
@@ -62,7 +66,10 @@ class ProductPage(BasePage):
                 end += scroll_step
 
     def set_model(self, model_name):
-        self.driver.find_element(*ProductPageLocators.MODEL).send_keys(model_name)
+        model_field = self.driver.find_element(*ProductPageLocators.MODEL)
+        model_field.send_keys(Keys.CONTROL + "a")
+        model_field.send_keys(Keys.BACKSPACE)
+        model_field.send_keys(model_name)
 
     def open_tab(self, tab_name):
         nav_bar = self.driver.find_element(*ProductPageLocators.NAV_BAR)
@@ -72,8 +79,11 @@ class ProductPage(BasePage):
                 tab.click()
                 break
 
-    def click_save(self):
+    def click_save_btn(self):
         self.driver.find_element(*ProductPageLocators.SAVE_BUTTON).click()
+
+    def click_remove_btn(self):
+        self.driver.find_element(*ProductPageLocators.REMOVE_BUTTON).click()
 
     def get_product_list(self):
         return self.driver.find_element(*ProductPageLocators.PRODUCT_TABLE)
@@ -86,3 +96,16 @@ class ProductPage(BasePage):
             if column_name.text == product_name:
                 return item
         return False
+
+    def select_product(self, product):
+        product.find_elements(*ProductPageLocators.ROW_COLUMN)[0].click()
+
+    def confirm_remove(self):
+        self.driver.switch_to.alert.accept()
+        sleep(3)
+
+    def click_edit_btn(self, product):
+        product.find_elements(*ProductPageLocators.ROW_COLUMN)[7].click()
+
+    def get_product_model(self, product):
+        return product.find_elements(*ProductPageLocators.ROW_COLUMN)[3].text

@@ -2,6 +2,9 @@ import pytest
 
 from lesson7.models.page_objects.page_objects import AdminPage, ProductPage
 
+PRODUCT = [{"ProductName": "TestName", "MetaTag": "TestMeta", "ProductModel": "TestModel"}]
+NEW_MODEL = ["NewTestModel"]
+
 
 @pytest.fixture()
 def admin_address(request):
@@ -11,6 +14,16 @@ def admin_address(request):
 @pytest.fixture()
 def admin_data(request):
     return request.config.getoption("login"), request.config.getoption("password")
+
+
+@pytest.fixture(params=PRODUCT)
+def product(request):
+    return request.param
+
+
+@pytest.fixture(params=NEW_MODEL)
+def new_model(request):
+    return request.param
 
 
 @pytest.fixture()
@@ -27,11 +40,28 @@ def product_page(driver, admin_address, admin_data):
 
 class TestProductPage:
 
-    def test_add_product(self, product_page):
+    def test_add_product(self, product_page, product):
         product_page.click_add_btn()
-        product_page.set_product_name("Test")
-        product_page.set_meta_tag("Meta")
+        product_page.set_product_name(product.get("ProductName"))
+        product_page.set_meta_tag(product.get("MetaTag"))
         product_page.open_tab("Data")
-        product_page.set_model("Model")
-        product_page.click_save()
-        assert product_page.get_product("Test")
+        product_page.set_model(product.get("ProductModel"))
+        product_page.click_save_btn()
+        assert product_page.get_product(product.get("ProductName"))
+
+    def test_set_description(self, product_page, product, new_model):
+        product_element = product_page.get_product(product.get("ProductName"))
+        product_page.click_edit_btn(product_element)
+        product_page.open_tab("Data")
+        product_page.set_model(new_model)
+        product_page.click_save_btn()
+        product_element = product_page.get_product(product.get("ProductName"))
+        assert product_page.get_product_model(product_element) == new_model
+
+    def test_remove_product(self, product_page, product):
+        product_element = product_page.get_product(product.get("ProductName"))
+        product_page.select_product(product_element)
+        product_page.click_remove_btn()
+        product_page.confirm_remove()
+        product_element = product_page.get_product(product.get("ProductName"))
+        assert product_element is False
