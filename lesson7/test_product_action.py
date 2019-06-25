@@ -49,7 +49,7 @@ class TestProductPage:
         product_page.click_save_btn()
         assert product_page.get_product(product.get("ProductName"))
 
-    def test_set_description(self, product_page, product, new_model):
+    def test_set_product_model(self, product_page, product, new_model):
         product_element = product_page.get_product(product.get("ProductName"))
         product_page.click_edit_btn(product_element)
         product_page.open_tab("Data")
