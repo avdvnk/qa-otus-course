@@ -2,7 +2,6 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from selenium.webdriver.ie.options import Options as IEOptions
 
 DRIVER_PATH = "D:\\drivers\\"
 
@@ -23,14 +22,11 @@ def driver(request):
         firefox_options.add_argument("-headless")
         execute_path = DRIVER_PATH + "geckodriver.exe"
         wd = webdriver.Firefox(options=firefox_options, executable_path=execute_path)
-    elif browser == "chrome":
+    else:
         chrome_options = ChromeOptions()
         chrome_options.add_argument("--headless")
         execute_path = DRIVER_PATH + "chromedriver.exe"
         wd = webdriver.Chrome(options=chrome_options, executable_path=execute_path)
-    else:
-        ie_options = IEOptions()
-        wd = webdriver.Ie()
     wd.maximize_window()
     yield wd
     wd.quit()

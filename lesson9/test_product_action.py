@@ -45,32 +45,21 @@ def product_page(driver, admin_address, admin_data):
 class TestProductPage:
 
     def test_add_product(self, product_page, product, delay):
-        product_page.click_add_btn()
-        product_page.set_product_name(product.get("ProductName"))
-        product_page.set_meta_tag(product.get("MetaTag"))
-        product_page.open_tab("Data")
-        product_page.set_model(product.get("ProductModel"))
-        product_page.click_save_btn()
+        product_page.add_product(product.get("ProductName"), product.get("MetaTag"), product.get("ProductModel"))
         assert product_page.get_product(product.get("ProductName"), delay)
 
     def test_set_product_model(self, product_page, product, new_model, delay):
         product_element = product_page.get_product(product.get("ProductName"), delay)
-        product_page.click_edit_btn(product_element)
-        product_page.open_tab("Data")
-        product_page.set_model(new_model)
-        product_page.click_save_btn()
+        product_page.edit_product_model(product_element, new_model)
         product_element = product_page.get_product(product.get("ProductName"), delay)
-        assert product_page.get_product_model(product_element) == new_model
+        assert product_page._get_product_model(product_element) == new_model
 
     def test_remove_product(self, product_page, product, delay):
         product_element = product_page.get_product(product.get("ProductName"), delay)
-        product_page.select_product(product_element)
-        product_page.click_remove_btn()
-        product_page.confirm_remove(delay)
+        product_page.remove_product(product_element, delay)
         product_element = product_page.get_product(product.get("ProductName"), delay)
         assert product_element is False
 
     def test_wait_dropdown_toggle(self, product_page, delay):
-        product_page.click_dropdown_toggle()
-        headers = product_page.get_dropdown_headers(delay)
+        headers = product_page.open_dropdown_toggle(delay)
         assert len(headers) == 2

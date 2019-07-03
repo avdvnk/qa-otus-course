@@ -44,33 +44,33 @@ class AdminPage(BasePage):
 
 class ProductPage(BasePage):
 
-    def get_window_height(self):
+    def _get_window_height(self):
         return self.driver.execute_script("return document.body.scrollHeight")
 
-    def click_add_btn(self):
+    def _click_add_btn(self):
         try:
             self.driver.find_element(*ProductPageLocators.ADD_BUTTON).click()
         except NoSuchElementException:
             raise AssertionError("Element not founded!")
 
-    def set_product_name(self, product_name):
+    def _set_product_name(self, product_name):
         try:
             self.driver.find_element(*ProductPageLocators.PRODUCT_NAME).send_keys(product_name)
         except NoSuchElementException:
             raise AssertionError("Can't edit the element!")
 
-    def get_meta_tag(self):
+    def _get_meta_tag(self):
         meta_tag = self.driver.find_elements(*ProductPageLocators.META_TAG)
         if len(meta_tag) == 0:
             return False
         return meta_tag[0]
 
-    def set_meta_tag(self, meta_tag):
-        scroll_step = self.get_window_height() / 10
+    def _set_meta_tag(self, meta_tag):
+        scroll_step = self._get_window_height() / 10
         start = 0
         end = scroll_step
         for i in range(10):
-            meta_tag_element = self.get_meta_tag()
+            meta_tag_element = self._get_meta_tag()
             if meta_tag_element:
                 meta_tag_element.send_keys(meta_tag)
                 break
@@ -79,7 +79,7 @@ class ProductPage(BasePage):
                 start = end
                 end += scroll_step
 
-    def set_model(self, model_name):
+    def _set_model(self, model_name):
         try:
             model_field = self.driver.find_element(*ProductPageLocators.MODEL)
             self._clear_element_(model_field)
@@ -87,7 +87,7 @@ class ProductPage(BasePage):
         except NoSuchElementException:
             raise AssertionError("Can't get the element!")
 
-    def open_tab(self, tab_name):
+    def _open_tab(self, tab_name):
         try:
             nav_bar = self.driver.find_element(*ProductPageLocators.NAV_BAR)
             tabs = nav_bar.find_elements(*ProductPageLocators.NAV_TABS)
@@ -98,19 +98,19 @@ class ProductPage(BasePage):
         except NoSuchElementException:
             raise AssertionError("Navigation bar not founded!")
 
-    def click_save_btn(self):
+    def _click_save_btn(self):
         try:
             self.driver.find_element(*ProductPageLocators.SAVE_BUTTON).click()
         except NoSuchElementException:
             raise AssertionError("Save button not founded!")
 
-    def click_remove_btn(self):
+    def _click_remove_btn(self):
         try:
             self.driver.find_element(*ProductPageLocators.REMOVE_BUTTON).click()
         except NoSuchElementException:
             raise AssertionError("Remove button not founded!")
 
-    def get_product_list(self, delay):
+    def _get_product_list(self, delay):
         try:
             WebDriverWait(self.driver, delay).until(EC.presence_of_element_located(ProductPageLocators.PRODUCT_TABLE))
             return self.driver.find_element(*ProductPageLocators.PRODUCT_TABLE)
@@ -120,7 +120,7 @@ class ProductPage(BasePage):
     def get_product(self, product_name, delay):
         try:
             WebDriverWait(self.driver, delay).until(EC.presence_of_element_located(ProductPageLocators.TABLE_BODY))
-            tbody = self.get_product_list(delay).find_element(*ProductPageLocators.TABLE_BODY)
+            tbody = self._get_product_list(delay).find_element(*ProductPageLocators.TABLE_BODY)
             products = tbody.find_elements(*ProductPageLocators.TABLE_ROW)
             for item in products:
                 WebDriverWait(item, delay).until(EC.presence_of_element_located(ProductPageLocators.ROW_COLUMN))
@@ -131,10 +131,10 @@ class ProductPage(BasePage):
         except (NoSuchElementException, TimeoutException):
             return False
 
-    def select_product(self, product):
+    def _select_product(self, product):
         product.find_elements(*ProductPageLocators.ROW_COLUMN)[0].click()
 
-    def confirm_remove(self, delay):
+    def _confirm_remove(self, delay):
         try:
             WebDriverWait(self.driver, float(delay)).until(EC.alert_is_present())
             self.driver.switch_to.alert.accept()
@@ -142,22 +142,22 @@ class ProductPage(BasePage):
         except (TimeoutException, NoSuchElementException):
             raise AssertionError("Element not founded!")
 
-    def click_edit_btn(self, product):
+    def _click_edit_btn(self, product):
         try:
             product.find_elements(*ProductPageLocators.ROW_COLUMN)[7].click()
         except NoSuchElementException:
             raise AssertionError("Element not founded!")
 
-    def get_product_model(self, product):
+    def _get_product_model(self, product):
         return product.find_elements(*ProductPageLocators.ROW_COLUMN)[3].text
 
-    def click_dropdown_toggle(self):
+    def _click_dropdown_toggle(self):
         try:
             self.driver.find_element(*ProductPageLocators.DROPDOWN_TOGGLE).click()
         except NoSuchElementException:
             raise AssertionError("Element not founded!")
 
-    def get_dropdown_headers(self, delay):
+    def _get_dropdown_headers(self, delay):
         try:
             WebDriverWait(self.driver, delay).until(EC.presence_of_element_located(ProductPageLocators.DROPDOWN_HEADER))
             dropdown_headers = self.driver.find_elements(*ProductPageLocators.DROPDOWN_HEADER)
@@ -166,3 +166,26 @@ class ProductPage(BasePage):
             return dropdown_headers
         except (NoSuchElementException, TimeoutException):
             return False
+
+    def add_product(self, product_name, meta_tag, product_model):
+        self._click_add_btn()
+        self._set_product_name(product_name)
+        self._set_meta_tag(meta_tag)
+        self._open_tab("Data")
+        self._set_model(product_model)
+        self._click_save_btn()
+
+    def edit_product_model(self, product_element, new_model):
+        self._click_edit_btn(product_element)
+        self._open_tab("Data")
+        self._set_model(new_model)
+        self._click_save_btn()
+
+    def remove_product(self, product_element, delay):
+        self._select_product(product_element)
+        self._click_remove_btn()
+        self._confirm_remove(delay)
+
+    def open_dropdown_toggle(self, delay):
+        self._click_dropdown_toggle()
+        return self._get_dropdown_headers(delay)
