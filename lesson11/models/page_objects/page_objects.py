@@ -1,8 +1,11 @@
-from time import sleep
+import threading
+from time import sleep, time
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 
 from lesson11.models.locator import AdminPageLocators, DashboardLocators
 from lesson11.models.locator import MainPageLocators, ProductPageLocators
@@ -44,15 +47,15 @@ class AdminPage(BasePage):
 
 class DashboardPage(BasePage):
 
-    def click_add_menu(self):
+    def get_add_nav_bar(self):
         try:
-            self.driver.find_element(*DashboardLocators.ADD_MENU).click()
+            return self.driver.find_element(*DashboardLocators.ADD_MENU)
         except NoSuchElementException:
             raise AssertionError("Element not founded!")
 
-    def click_menu_item(self, item_name, delay):
+    def click_menu_item(self, nav_menu, item_name, delay):
         try:
-            WebDriverWait(self.driver, delay).until(EC.presence_of_element_located(DashboardLocators.DROPDOWN_MENU))
+            WebDriverWait(nav_menu, delay).until(EC.presence_of_element_located(DashboardLocators.DROPDOWN_MENU))
             menu = self.driver.find_element(*DashboardLocators.DROPDOWN_MENU)
             items = menu.find_elements(*DashboardLocators.MENU_ITEMS)
             for item in items:
@@ -96,7 +99,7 @@ class DashboardPage(BasePage):
         except NoSuchElementException:
             raise AssertionError("Element not founded!")
 
-    def set_product_image(self, image_number, image_path):
+    def set_product_image(self, image_number, image_path, delay):
         try:
             images_table = self.driver.find_element(*DashboardLocators.IMAGES_TABLE)
             images = images_table.find_elements(*DashboardLocators.TABLE_ROWS)
@@ -104,6 +107,8 @@ class DashboardPage(BasePage):
                 raise AssertionError("Wrong image number!")
             images[image_number].find_element(*DashboardLocators.IMAGE_TAG).click()
             self.driver.find_element(*DashboardLocators.EDIT_IMAGE_BUTTON).click()
+            WebDriverWait(self.driver, delay).\
+                until(EC.presence_of_element_located(DashboardLocators.UPLOAD_IMAGE_BUTTON))
             self.driver.find_element(*DashboardLocators.UPLOAD_IMAGE_BUTTON).send_keys(image_path)
         except NoSuchElementException:
             raise AssertionError("Element not founded!")
@@ -153,3 +158,59 @@ class DashboardPage(BasePage):
             return self.driver.find_element(*ProductPageLocators.PRODUCT_TABLE)
         except NoSuchElementException:
             return False
+
+    def get_left_menu(self):
+        try:
+            return self.driver.find_element(*DashboardLocators.LEFT_MENU)
+        except NoSuchElementException:
+            raise AssertionError("Element not founded!")
+
+    def get_design_subsection(self, left_menu):
+        try:
+            return left_menu.find_element(*DashboardLocators.MENU_DESIGN)
+        except NoSuchElementException:
+            return False
+
+    def click_subsection_item(self, subsection, item_name, delay):
+        WebDriverWait(subsection, delay).until(EC.presence_of_element_located(DashboardLocators.MENU_ITEMS))
+        items = subsection.find_elements(*DashboardLocators.MENU_ITEMS)
+        for item in items:
+            if item.text == item_name:
+                item.click()
+                break
+
+    def select_category(self, category_name, delay):
+        try:
+            WebDriverWait(self.driver, delay).until(EC.presence_of_element_located(DashboardLocators.CATEGORY_ITEMS))
+            categories = self.driver.find_elements(*DashboardLocators.CATEGORY_ITEMS)
+            print(len(categories))
+            for category in categories:
+                if category_name in category.text:
+                    return category
+            return False
+        except TimeoutException:
+            raise AssertionError("Element not founded!")
+
+    def drag_and_drop_element(self, element, x, y):
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        ActionChains(self.driver).drag_and_drop_by_offset(element, x, y).perform()
+
+    def get_element_y(self, element):
+        return element.location.get("y")
+
+    def get_element_x(self, element):
+        return element.location.get("x")
+
+    def set_download_name(self, download_name):
+        self.driver.find_element(*DashboardLocators.DOWNLOAD_NAME).send_keys(download_name)
+
+    def set_download_mask(self, download_mask):
+        self.driver.find_element(*DashboardLocators.DOWNLOAD_MASK).send_keys(download_mask)
+
+    def add_download_file(self, file_path):
+        upload_btn = self.driver.find_element(*DashboardLocators.DOWNLOAD_BUTTON).send_keys(file_path)
+        self.driver.execute_script("HTMLInputElement.prototype.click = function(){"
+                                   "    if(this.type != 'file') HTMLElement.prototype.click.call(this);"
+                                   "};")
+        inputs = upload_btn.find_element_by_name("file")
+        print(inputs.text)

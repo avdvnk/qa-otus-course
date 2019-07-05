@@ -43,8 +43,8 @@ class ProductPageLocators:
 
 
 class DashboardLocators:
-    ADD_MENU = (By.XPATH, "//a[@class='dropdown-toggle'][@title='Добавить']")
-    DROPDOWN_MENU = (By.CSS_SELECTOR, "ul.dropdown-menu dropdown-menu-left alerts-dropdown")
+    ADD_MENU = (By.XPATH, "//ul[@class='nav pull-left']")
+    DROPDOWN_MENU = (By.TAG_NAME, "li")
     MENU_ITEMS = (By.TAG_NAME, "li")
     PRODUCT_NAME_INPUT = (By.ID, "input-name1")
     NAV_BAR = (By.XPATH, "//ul[@class='nav nav-tabs']")
@@ -58,4 +58,9 @@ class DashboardLocators:
     SAVE_BUTTON = (By.XPATH, "//button[@data-original-title='Сохранить']")
     CATALOG_MENU = (By.ID, "menu-catalog")
     MENU_BUTTON = (By.ID, "button-menu")
-
+    LEFT_MENU = (By.ID, "menu")
+    MENU_DESIGN = (By.ID, "menu-design")
+    CATEGORY_ITEMS = (By.TAG_NAME, "dl")
+    DOWNLOAD_NAME = (By.XPATH, "//input[@name='download_description[1][name]']")
+    DOWNLOAD_MASK = (By.XPATH, "//input[@name='mask']")
+    DOWNLOAD_BUTTON = (By.ID, "button-upload")
