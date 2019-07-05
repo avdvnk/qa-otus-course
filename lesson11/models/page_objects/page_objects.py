@@ -1,11 +1,7 @@
-import threading
-from time import sleep, time
-
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.common.keys import Keys
 
 from lesson11.models.locator import AdminPageLocators, DashboardLocators
 from lesson11.models.locator import MainPageLocators, ProductPageLocators
@@ -165,9 +161,9 @@ class DashboardPage(BasePage):
         except NoSuchElementException:
             raise AssertionError("Element not founded!")
 
-    def get_design_subsection(self, left_menu):
+    def get_design_subsection(self):
         try:
-            return left_menu.find_element(*DashboardLocators.MENU_DESIGN)
+            return self.driver.find_element(*DashboardLocators.MENU_DESIGN)
         except NoSuchElementException:
             return False
 
@@ -192,7 +188,6 @@ class DashboardPage(BasePage):
             raise AssertionError("Element not founded!")
 
     def drag_and_drop_element(self, element, x, y):
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
         ActionChains(self.driver).drag_and_drop_by_offset(element, x, y).perform()
 
     def get_element_y(self, element):

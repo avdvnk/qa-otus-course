@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
-DRIVER_PATH = "C:\\PyProjects\\drivers\\"
+DRIVER_PATH = "D:\\drivers\\"
 
 
 def pytest_addoption(parser):
@@ -19,7 +19,7 @@ def driver(request):
     browser = request.config.getoption("--browser")
     if browser == "firefox":
         firefox_options = FirefoxOptions()
-        # firefox_options.add_argument("-headless")
+        firefox_options.add_argument("-headless")
         execute_path = DRIVER_PATH + "geckodriver.exe"
         wd = webdriver.Firefox(options=firefox_options, executable_path=execute_path)
     else:

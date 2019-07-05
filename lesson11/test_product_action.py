@@ -5,6 +5,7 @@ import pytest
 from lesson11.models.page_objects.page_objects import AdminPage, DashboardPage
 
 PRODUCT = [{"ProductName": "TestName", "MetaTag": "TestMeta", "ProductModel": "TestModel"}]
+CATEGORY = ["test 20"]
 
 
 @pytest.fixture()
@@ -19,6 +20,10 @@ def admin_data(request):
 
 @pytest.fixture(params=PRODUCT)
 def product(request):
+    return request.param
+
+@pytest.fixture(params=CATEGORY)
+def category(request):
     return request.param
 
 
@@ -60,12 +65,11 @@ class TestProductPage:
         product = dashboard_page.get_product("TestName", delay)
         assert product
 
-    def test_drag_and_drop_items(self, dashboard_page, delay):
-        left_menu = dashboard_page.get_left_menu()
-        design_subselection = dashboard_page.get_design_subsection(left_menu)
+    def test_drag_and_drop_items(self, dashboard_page, delay, category):
+        design_subselection = dashboard_page.get_design_subsection()
         design_subselection.click()
         dashboard_page.click_subsection_item(design_subselection, "Конструктор Меню", delay)
-        category = dashboard_page.select_category("test 20", delay)
+        category = dashboard_page.select_category(category, delay)
         current_y = dashboard_page.get_element_y(category)
         dashboard_page.drag_and_drop_element(category, 0, 100)
         new_y = dashboard_page.get_element_y(category)
