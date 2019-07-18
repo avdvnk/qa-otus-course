@@ -1,5 +1,7 @@
 import socket
 
+from lesson22.MyHTMLParser import MyHTMLParser
+
 
 def send_request(method, host, port, url, headers, body=""):
     request = "{} {} HTTP/1.1\r\n".format(method, url)
@@ -23,6 +25,12 @@ def get_response(my_socket):
     return result.decode()
 
 
+def get_full_info(input_data):
+    parser = MyHTMLParser()
+    parser.feed(input_data)
+    print(parser.get_most_frequent_tag())
+
+
 if __name__ == '__main__':
     req_method = "GET"
     req_host = "demo23.opencart.pro"
@@ -30,4 +38,5 @@ if __name__ == '__main__':
     req_url = "/admin/"
     req_headers = {"Host": "demo23.opencart.pro"}
     s = send_request(req_method, req_host, req_port, req_url, req_headers)
-    print(get_response(s))
+    result = get_response(s)
+    get_full_info(result)
