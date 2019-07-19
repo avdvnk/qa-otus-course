@@ -7,19 +7,27 @@ class MyHTMLParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.tags = Counter()
+        self.text = []
+        self.links = []
 
     def handle_starttag(self, tag, attrs):
         self.tags[tag] += 1
-        print("Tag: {}".format(tag))
-
         for attr in attrs:
             if attr[0] == "href":
-                print("\tSource: {}".format(attr))
+                self.links.append(attr[1])
             if tag == "img" and attr[0] == "src":
-                print("\tSource: {}".format(attr))
+                self.links.append(attr[1])
 
     def handle_data(self, data):
-        print("\tData: {}".format(data))
+        strip_data = data.strip()
+        if strip_data != "":
+            self.text.append(strip_data)
 
-    def get_most_frequent_tag(self):
-        return self.tags.most_common(1)
+    def get_text(self):
+        return self.text
+
+    def get_tags(self):
+        return self.tags
+
+    def get_links(self):
+        return self.links
