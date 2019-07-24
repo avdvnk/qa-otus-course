@@ -2,6 +2,9 @@ import pytest
 
 from lesson6.models.page_objects.page_objects import AdminPage
 
+username = "username"
+password = "userpassword"
+
 
 @pytest.fixture()
 def admin_address(request, driver):

@@ -22,6 +22,7 @@ def admin_data(request):
 def product(request):
     return request.param
 
+
 @pytest.fixture(params=CATEGORY)
 def category(request):
     return request.param
@@ -53,11 +54,11 @@ class TestProductPage:
         dashboard_page.open_nav_bar_element(nav_bar, "Изображения")
         dashboard_page.click_add_image_btn()
         dirname = os.path.dirname(__file__)
-        dashboard_page.set_product_image(1, dirname + "1.jpg", delay)
+        dashboard_page.set_product_image(1, dirname + "\\1.jpg", delay)
         dashboard_page.click_add_image_btn()
-        dashboard_page.set_product_image(2, dirname + "2.jpg", delay)
+        dashboard_page.set_product_image(2, dirname + "\\2.jpg", delay)
         dashboard_page.click_add_image_btn()
-        dashboard_page.set_product_image(3, dirname + "3.jpg", delay)
+        dashboard_page.set_product_image(3, dirname + "\\3.jpg", delay)
         dashboard_page.click_save_btn()
         dashboard_page.click_btn_menu()
         catalog = dashboard_page.get_catalog_menu()
@@ -84,4 +85,3 @@ class TestProductPage:
         dirname = os.path.dirname(__file__)
         dashboard_page.add_download_file(dirname + "\\1.jpg")
         dashboard_page.click_save_btn()
-

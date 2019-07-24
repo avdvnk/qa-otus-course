@@ -1,5 +1,3 @@
-import os
-
 import pytest
 
 from lesson12.models.page_objects.page_objects import AdminPage, DashboardPage

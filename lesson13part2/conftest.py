@@ -1,7 +1,6 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 
 from lesson12.utils.my_listener import MyListener
