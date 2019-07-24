@@ -1,4 +1,5 @@
-FROM /selenium/standalone-firefox
+FROM selenium/standalone-firefox
+RUN sudo apt-get install software-properties-common
 RUN sudo apt-add-repository ppa:qameta/allure
 RUN sudo apt-get update
 RUN sudo apt-get install allure
