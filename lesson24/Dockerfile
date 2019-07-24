@@ -1,9 +1,9 @@
 FROM selenium/standalone-firefox
+RUN sudo apt update
 RUN sudo apt-get install software-properties-common
 RUN sudo apt-add-repository ppa:qameta/allure
 RUN sudo apt-get update
 RUN sudo apt-get install allure
-RUN sudo apt update
 RUN sudo apt install git
 RUN cd /home/seluser
 RUN mkdir tests
