@@ -5,6 +5,8 @@ python3-venv
 RUN sudo apt-add-repository ppa:qameta/allure
 RUN sudo apt-get update
 RUN sudo apt-get install -y allure
+RUN sudo mkdir /tests
+RUN sudo chmod 777 /tests -R
 RUN git clone https://github.com/avdvnk/qa-otus-course.git /tests
 RUN cd /tests
 RUN python3 -m venv /tests/venv
